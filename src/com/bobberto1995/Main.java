@@ -195,6 +195,7 @@ public class Main extends PApplet
 		text("? = Toggle help", 0, 9 * ts);
 		text("X = Take Picture", 0, 10 * ts);
 		text("L = Toggle overlay", 0, 11 * ts);
+		text("R = Dump info for other programs", 0, 12 * ts);
 	}
 
 	public void drawVerbose() {
@@ -334,6 +335,18 @@ public class Main extends PApplet
 		{
 			showOverlay = !showOverlay;
 			refresh();
+		}
+		if(key == 'r' || key == 'R')
+		{
+			double centerX = (minX + maxX) / 2d;
+			double centerY = (minY + maxY) / 2d;
+			System.out.println("Minimum X: " + minX);
+			System.out.println("Maximum X: " + maxX);
+			System.out.println("Center X: " + centerX);
+			System.out.println("Center Y: " + centerY);
+			System.out.println("scaleFac = 4 ^ (-1 / frames) * " + (maxX - minX) + " ^ (1 / frames)");
+			System.out.println("Example for 1000 frames: ");
+			System.out.println("scaleFac = " + Math.pow(4, (-1 / 1000d)) * Math.pow((maxX - minX),(1/1000d)));
 		}
 	}
 
