@@ -17,8 +17,8 @@ public class FractalRenderer
 			for(int x = 0; x < xRes; x++)
 			{
 				iter = 0;
-				real = map(x,0,xRes,minX, maxX);
-				imag = map(y,0,yRes,minY, maxY);
+				real = FractalUtils.map(x,0,xRes,minX, maxX);
+				imag = FractalUtils.map(y,0,yRes,minY, maxY);
 				xx = 0;
 				yy = 0;
 				while(iter < maxIters && xx * xx + yy * yy < 4)
@@ -30,22 +30,39 @@ public class FractalRenderer
 				}
 				if(iter == maxIters)
 				{
-					result.pixels[x + y * xRes] = 0;
+					result.pixels[x + y * xRes] = 255 << 24;
 				}
 				else
 				{
-					result.pixels[x + y * xRes] = ((iter % 255) << 16) + ((iter % 255) << 8) + (iter % 255);
+					result.pixels[x + y * xRes] = FractalUtils.color(iter % 255, iter % 255, iter % 255);
 				}
 			}
 		}
 		result.updatePixels();
 		return result;
 	}
-	
-	public static double map(double input, double inMin, double inMax, double outMin, double outMax)
+	public static int renderMandelbrotPixel(double real, double imag, int maxIters)
 	{
-		double inRange = (inMin - inMax);
-		double outRange = (outMin - outMax);
-		return ((input - inMin) / inRange) * outRange + outMin;
+		int result;
+		int iter = 0;
+		double xx = 0;
+		double yy = 0;
+		double temp;
+		while(iter < maxIters && xx * xx + yy * yy < 4)
+		{
+			temp = xx * xx - yy * yy + real;
+			yy = 2 * xx * yy + imag;
+			xx = temp;
+			iter++;
+		}
+		if(iter == maxIters)
+		{
+			result = 255 << 24;
+		}
+		else
+		{
+			result = FractalUtils.color(iter % 255, iter % 255, iter % 255);
+		}
+		return result;
 	}
 }

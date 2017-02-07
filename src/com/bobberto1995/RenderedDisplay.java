@@ -11,11 +11,29 @@ public class RenderedDisplay extends PApplet
 		size(1024,768);
 		fi = new FractalImage(1024,768);
 		fi.render();
-		fi.zoomIn();
 		image(fi.getImage(),0,0);
 	}
 	public void draw()
 	{
 		
+	}
+	public void mousePressed()
+	{
+		fi.zoomIn(mouseX, mouseY);
+		background(255);
+		image(fi.getImage(),0,0);
+	}
+	public void keyPressed()
+	{
+		if(key == 'Q' || key == 'q')
+		{
+			fi.zoomIn(mouseX, mouseY);
+			image(fi.getImage(),0,0);
+		}
+		else if(key == 'E' || key == 'e')
+		{
+			fi.zoomOut(mouseX, mouseY);
+			image(fi.getImage(),0,0);
+		}
 	}
 }
