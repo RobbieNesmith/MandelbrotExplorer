@@ -35,5 +35,25 @@ public class RenderedDisplay extends PApplet
 			fi.zoomOut(mouseX, mouseY);
 			image(fi.getImage(),0,0);
 		}
+		else if(key == 'A' || key == 'a')
+		{
+			fi.panLeft();
+			image(fi.getImage(),0,0);
+		}
+		else if(key == 'D' || key == 'd')
+		{
+			fi.panRight();
+			image(fi.getImage(),0,0);
+		}
+		else if(key =='W' || key == 'w')
+		{
+			fi.panUp();
+			image(fi.getImage(),0,0);
+		}
+		else if(key == 'S' || key == 's')
+		{
+			fi.panDown();
+			image(fi.getImage(),0,0);
+		}
 	}
 }
