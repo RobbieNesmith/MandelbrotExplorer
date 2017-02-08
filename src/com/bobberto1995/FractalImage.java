@@ -243,4 +243,8 @@ public class FractalImage
 		//return FractalColorManager.itersMod(this.iterMap, this.xRes, this.yRes,this.maxIters);
 		return FractalColorManager.itersLinear(this.iterMap, this.xRes, this.yRes,this.maxIters);
 	}
+	public int[] getIterMap()
+	{
+		return this.iterMap;
+	}
 }
