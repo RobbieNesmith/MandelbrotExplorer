@@ -18,4 +18,9 @@ public class FractalUtils
 	{
 		return FractalUtils.color(255, r, g, b);
 	}
+	
+	public static int color(int grey)
+	{
+		return FractalUtils.color(255, grey, grey, grey);
+	}
 }

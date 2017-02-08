@@ -1,18 +1,17 @@
 package com.bobberto1995;
 
-import processing.core.PConstants;
 import processing.core.PImage;
 
 public class FractalImage
 {
 	
-	private PImage theImage;
+	private int[] iterMap;
 	private double minX, maxX, minY, maxY;
 	private int xRes, yRes, maxIters;
 	
 	public FractalImage(int xRes, int yRes)
 	{
-		this.theImage = new PImage(xRes, yRes);
+		this.iterMap = new int[xRes * yRes];
 		this.xRes = xRes;
 		this.yRes = yRes;
 		this.reset();
@@ -20,13 +19,13 @@ public class FractalImage
 	
 	public void render()
 	{
-		theImage = FractalRenderer.renderMandelbrot(this.minX, this.maxX, this.minY, this.maxY, this.xRes, this.yRes, this.maxIters);
+		this.iterMap = FractalRenderer.renderMandelbrotIters(this.minX, this.maxX, this.minY, this.maxY, this.xRes, this.yRes, this.maxIters);
 	}
 	
 	public void reset()
 	{
-		this.minX = -2;
-		this.maxX = 2;
+		this.minX = -2.5;
+		this.maxX = 1.5;
 		this.minY = -1.5;
 		this.maxY = 1.5;
 		this.maxIters = 1024;
@@ -43,8 +42,7 @@ public class FractalImage
 		this.minY = imagPos - yRange / 4;
 		this.maxY = imagPos + yRange / 4;
 		
-		PImage newImg = new PImage(this.xRes,this.yRes,PConstants.ARGB);
-		newImg.loadPixels();
+		int[] newIterMap = new int[xRes * yRes];
 		for(int y = 0; y < this.yRes; y++)
 		{
 			for(int x = 0; x < this.xRes; x++)
@@ -55,25 +53,24 @@ public class FractalImage
 					int oldY = y / 2 + yPos - yRes / 4;
 					if(oldX >= 0 && oldX < xRes && oldY >= 0 && oldY < yRes)
 					{
-						newImg.pixels[y * this.xRes + x] = theImage.pixels[oldY * this.xRes + oldX];
+						newIterMap[y * this.xRes + x] = this.iterMap[oldY * this.xRes + oldX];
 					}
 					else
 					{
 						double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 						double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-						newImg.pixels[y * this.xRes + x] = FractalRenderer.renderMandelbrotPixel(real,imag,this.maxIters);
+						newIterMap[y * this.xRes + x] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
 					}
 				}
 				else
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newImg.pixels[y * this.xRes + x] = FractalRenderer.renderMandelbrotPixel(real,imag,this.maxIters);
+					newIterMap[y * this.xRes + x] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
 				}
 			}
 		}
-		newImg.updatePixels();
-		this.theImage = newImg;
+		this.iterMap = newIterMap;
 	}
 	
 	public void zoomOut(int xPos,int yPos)
@@ -87,8 +84,7 @@ public class FractalImage
 		this.minY = imagPos - yRange;
 		this.maxY = imagPos + yRange;
 		
-		PImage newImg = new PImage(this.xRes,this.yRes,PConstants.ARGB);
-		newImg.loadPixels();
+		int[] newIterMap = new int[xRes * yRes];
 		for(int y = 0; y < this.yRes; y++)
 		{
 			for(int x = 0; x < this.xRes; x++)
@@ -97,25 +93,22 @@ public class FractalImage
 				int oldY = (y + yPos + yRes / 4) * 2;
 				if(oldX >= 0 && oldX < xRes && oldY >= 0 && oldY < yRes)
 				{
-					newImg.pixels[y * this.xRes + x] = theImage.pixels[oldY * this.xRes + oldX];
+					newIterMap[y * this.xRes + x] = this.iterMap[oldY * this.xRes + oldX];
 				}
 				else
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newImg.pixels[y * this.xRes + x] = FractalRenderer.renderMandelbrotPixel(real,imag,this.maxIters);
-					//newImg.pixels[y * this.xRes + x] = FractalUtils.color(255, 0, 0);
+					newIterMap[y * this.xRes + x] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
 				}
 			}
 		}
-		newImg.updatePixels();
-		this.theImage = newImg;
+		this.iterMap = newIterMap;
 	}
 	
 	public void panLeft()
 	{
-		PImage newImg = new PImage(xRes,yRes,PConstants.ARGB);
-		newImg.loadPixels();
+		int[] newIterMap = new int[xRes * yRes];
 		double xRange = maxX - minX;
 		minX -= xRange / 8;
 		maxX -= xRange / 8;
@@ -125,24 +118,22 @@ public class FractalImage
 			{
 				if(x > this.xRes / 8)
 				{
-					newImg.pixels[x + y * this.xRes] = theImage.pixels[(x - xRes / 8) + y * xRes];
+					newIterMap[x + y * this.xRes] = this.iterMap[(x - xRes / 8) + y * xRes];
 				}
 				else
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newImg.pixels[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixel(real, imag, this.maxIters);
+					newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
 				}
 			}
 		}
-		newImg.updatePixels();
-		theImage = newImg;
+		this.iterMap = newIterMap;
 	}
 	
 	public void panRight()
 	{
-		PImage newImg = new PImage(xRes,yRes,PConstants.ARGB);
-		newImg.loadPixels();
+		int[] newIterMap = new int[xRes * yRes];
 		double xRange = maxX - minX;
 		minX += xRange / 8;
 		maxX += xRange / 8;
@@ -152,24 +143,22 @@ public class FractalImage
 			{
 				if(x < xRes - this.xRes / 8)
 				{
-					newImg.pixels[x + y * this.xRes] = theImage.pixels[(x + xRes / 8) + y * xRes];
+					newIterMap[x + y * this.xRes] = iterMap[(x + xRes / 8) + y * xRes];
 				}
 				else
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newImg.pixels[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixel(real, imag, this.maxIters);
+					newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
 				}
 			}
 		}
-		newImg.updatePixels();
-		theImage = newImg;
+		this.iterMap = newIterMap;
 	}
 	
 	public void panUp()
 	{
-		PImage newImg = new PImage(xRes,yRes,PConstants.ARGB);
-		newImg.loadPixels();
+		int[] newIterMap = new int[xRes * yRes];
 		double yRange = maxY - minY;
 		minY -= yRange / 8;
 		maxY -= yRange / 8;
@@ -179,24 +168,22 @@ public class FractalImage
 			{
 				if(y > this.yRes / 8)
 				{
-					newImg.pixels[x + y * this.xRes] = theImage.pixels[x + (y - yRes / 8) * xRes];
+					newIterMap[x + y * this.xRes] = iterMap[x + (y - yRes / 8) * xRes];
 				}
 				else
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newImg.pixels[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixel(real, imag, this.maxIters);
+					newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
 				}
 			}
 		}
-		newImg.updatePixels();
-		theImage = newImg;
+		this.iterMap = newIterMap;
 	}
 	
 	public void panDown()
 	{
-		PImage newImg = new PImage(xRes,yRes,PConstants.ARGB);
-		newImg.loadPixels();
+		int[] newIterMap = new int[xRes * yRes];
 		double yRange = maxY - minY;
 		minY += yRange / 8;
 		maxY += yRange / 8;
@@ -206,27 +193,54 @@ public class FractalImage
 			{
 				if(y < this.yRes - this.yRes / 8)
 				{
-					newImg.pixels[x + y * this.xRes] = theImage.pixels[x + (y + yRes / 8) * xRes];
+					newIterMap[x + y * this.xRes] = this.iterMap[x + (y + yRes / 8) * xRes];
 				}
 				else
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newImg.pixels[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixel(real, imag, this.maxIters);
+					newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
 				}
 			}
 		}
-		newImg.updatePixels();
-		theImage = newImg;
+		this.iterMap = newIterMap;
+	}
+	
+	public int getMaxIters()
+	{
+		return this.maxIters;
+	}
+	
+	public void setMaxiters(int newMaxIters)
+	{
+		for(int y = 0; y < this.yRes; y++)
+		{
+			for(int x = 0; x < xRes; x++)
+			{
+				if(newMaxIters > this.maxIters)
+				{
+					if(this.iterMap[x + y * this.xRes] == this.maxIters)
+					{
+						double real = FractalUtils.map(x, 0, xRes, minX, maxX);
+						double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
+						this.iterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, newMaxIters);
+					}
+				}
+				else
+				{
+					if(this.iterMap[x + y * this.xRes] > newMaxIters)
+					{
+						this.iterMap[x + y * this.xRes] = newMaxIters;
+					}
+				}
+			}
+		}
+		this.maxIters = newMaxIters;
 	}
 	
 	public PImage getImage()
 	{
-		return this.theImage;
-	}
-	
-	private double calcPixelWidth() // assuming that there are square pixels
-	{
-		return (this.maxX - this.minX) / this.xRes;
+		//return FractalColorManager.itersMod(this.iterMap, this.xRes, this.yRes,this.maxIters);
+		return FractalColorManager.itersLinear(this.iterMap, this.xRes, this.yRes,this.maxIters);
 	}
 }

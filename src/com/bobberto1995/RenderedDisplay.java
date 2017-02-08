@@ -55,5 +55,18 @@ public class RenderedDisplay extends PApplet
 			fi.panDown();
 			image(fi.getImage(),0,0);
 		}
+		else if(key == 'I' || key == 'i')
+		{
+			fi.setMaxiters(fi.getMaxIters() * 2);
+			image(fi.getImage(),0,0);
+		}
+		else if(key == 'K' || key == 'k')
+		{
+			if(fi.getMaxIters() > 1)
+			{
+				fi.setMaxiters(fi.getMaxIters() / 2);
+				image(fi.getImage(),0,0);
+			}
+		}
 	}
 }
