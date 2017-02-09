@@ -237,12 +237,6 @@ public class FractalImage
 		}
 		this.maxIters = newMaxIters;
 	}
-	
-	public PImage getImage()
-	{
-		//return FractalColorManager.itersMod(this.iterMap, this.xRes, this.yRes,this.maxIters);
-		return FractalColorManager.itersLinear(this.iterMap, this.xRes, this.yRes,this.maxIters);
-	}
 	public int[] getIterMap()
 	{
 		return this.iterMap;

@@ -1,6 +1,7 @@
 package com.bobberto1995;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class FractalUtils
 {
@@ -15,7 +16,7 @@ public class FractalUtils
 	{
 		BigDecimal inRange = (inMin.subtract(inMax));
 		BigDecimal outRange = (outMin.subtract(outMax));
-		return (input.subtract(inMin).divide(inRange)).multiply(outRange).add(outMin);
+		return (input.subtract(inMin).divide(inRange,5,RoundingMode.CEILING)).multiply(outRange).add(outMin);
 	}
 	
 	public static int color(int a, int r, int g, int b)
