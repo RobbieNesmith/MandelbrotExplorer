@@ -14,7 +14,7 @@ public class RenderedDisplay extends PApplet
 		fi = new FractalImage(1024,768);
 		fi.render();
 		updated = true;
-		gradient = loadImage(sketchPath("img/Gradient2.png"));
+		gradient = loadImage(sketchPath("img/Gradient3.png"));
 	}
 	public void draw()
 	{
