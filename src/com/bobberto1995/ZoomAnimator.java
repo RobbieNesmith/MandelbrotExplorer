@@ -56,14 +56,16 @@ public class ZoomAnimator extends PApplet
 			PImage p;
 			if(mode == 0)
 			{
-				p = drawMandelbrot(width, height, iterations, minX, minY, maxX, maxY);
+				int[] iters = FractalRenderer.renderMandelbrotIters(minX, maxX, minY, maxY, width, height, iterations);
+				p = FractalColorManager.itersMod(iters, width, height, iterations);
 			}
 			else
 			{
-				p = drawJulia(width, height, real, imag, iterations, minX, minY, maxX, maxY);
+				int[] iters = FractalRenderer.renderJuliaIters(real, imag, minX, maxX, minY, maxY, width, height, iterations);
+				p = FractalColorManager.itersMod(iters, width, height, iterations);
 			}
 			
-			p.save(filename + i + ".png");
+			p.save(sketchPath(filename + i + ".png"));
 			
 			curPosReal += (pointReal - curPosReal) / 16;
 			curPosImag += (pointImag - curPosImag) / 16;
@@ -78,64 +80,6 @@ public class ZoomAnimator extends PApplet
 	{
 		System.out.println(100);
 		System.out.println("Done.");
-	}
-	
-	public PImage drawMandelbrot(int w, int h, int iterations, double minX, double minY, double maxX, double maxY)
-	{
-		PImage p = createImage(w, h, HSB);
-		p.loadPixels();
-		for (int i = 0; i < w; i++) {
-			for (int j = 0; j < h; j++) {
-				double ii = (double)i / (double)w * (maxX - minX) + minX; //map(i, 0, width, minX, maxX);
-				double jj = (double)j / (double)h * (maxY - minY) + minY;
-				double a = ii;
-				double b = jj;
-
-				int iter = 0;
-
-				while (iter < iterations && a * a + b * b < 4) {
-					double temp = a * a - b * b + ii;
-					b = 2 * a * b + jj;
-					a = temp;
-					iter++;
-				}
-				if (iter == iterations) {
-					p.pixels[w * j + i] = color(0);
-				} else {
-					p.pixels[w * j + i] = color(iter % 255, 255, 255);
-				}
-				
-			}
-		}
-		p.updatePixels();
-		return p;
-	}
-	public PImage drawJulia(int w, int h, double real, double imag, int iterations, double minX, double minY, double maxX, double maxY)
-	{
-		PImage p = createImage(w, h, HSB);
-		
-		p.loadPixels();
-		for (int i = 0; i < w; i++) {
-			for (int j = 0; j < h; j++) {
-				double a = (double)i / (double)w * (maxX - minX) + minX;
-				double b = (double)j / (double)h * (maxY - minY) + minY;
-
-				int iter = 0;
-
-				while (iter < iterations && a * a + b * b < 4) {
-					double temp = a * a - b * b + real;
-					b = 2 * a * b + imag;
-					a = temp;
-					iter++;
-				}
-				if (iter == iterations) {
-					p.pixels[w * j + i] = color(0);
-				} else {
-					p.pixels[w * j + i] = color(iter % 255, 255, 255);
-				}
-			}
-		}
-		
-		return p;
+		exit();
 	}
 }

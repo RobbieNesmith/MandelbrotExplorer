@@ -1,7 +1,5 @@
 package com.bobberto1995;
 
-import processing.core.PImage;
-
 public class FractalImage
 {
 	

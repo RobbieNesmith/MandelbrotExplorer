@@ -1,7 +1,5 @@
 package com.bobberto1995;
 
-import java.util.Collections;
-
 import processing.core.PImage;
 
 public class FractalColorManager
@@ -22,6 +20,7 @@ public class FractalColorManager
 				result.pixels[i] = FractalUtils.color(iters[i] % 255);
 			}
 		}
+		result.updatePixels();
 		return result;
 	}
 	
