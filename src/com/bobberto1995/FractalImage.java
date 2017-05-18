@@ -2,10 +2,13 @@ package com.bobberto1995;
 
 public class FractalImage
 {
-	
+	public static boolean MODE_MANDELBROT = false;
+	public static boolean MODE_JULIA = true;
+	private boolean mode;
 	private int[] iterMap;
 	private double minX, maxX, minY, maxY;
 	private int xRes, yRes, maxIters;
+	private double seedReal, seedImag;
 	
 	public FractalImage(int xRes, int yRes)
 	{
@@ -17,7 +20,14 @@ public class FractalImage
 	
 	public void render()
 	{
-		this.iterMap = FractalRenderer.renderMandelbrotIters(this.minX, this.maxX, this.minY, this.maxY, this.xRes, this.yRes, this.maxIters);
+		if(this.mode == FractalImage.MODE_MANDELBROT)
+		{
+			this.iterMap = FractalRenderer.renderMandelbrotIters(this.minX, this.maxX, this.minY, this.maxY, this.xRes, this.yRes, this.maxIters);
+		}
+		else
+		{
+			this.iterMap = FractalRenderer.renderJuliaIters(seedReal,seedImag,this.minX, this.maxX, this.minY, this.maxY, this.xRes, this.yRes, this.maxIters);
+		}
 	}
 	
 	public void reset()
@@ -27,6 +37,7 @@ public class FractalImage
 		this.minY = -1.5;
 		this.maxY = 1.5;
 		this.maxIters = 1024;
+		render();
 	}
 	
 	public void zoomIn(int xPos, int yPos)
@@ -57,14 +68,28 @@ public class FractalImage
 					{
 						double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 						double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-						newIterMap[y * this.xRes + x] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+						if(this.mode == FractalImage.MODE_MANDELBROT)
+						{
+							newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+						}
+						else
+						{
+							newIterMap[x + y * this.xRes] = FractalRenderer.renderJuliaPixelIters(real, imag, seedReal, seedImag, this.maxIters);
+						}
 					}
 				}
 				else
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newIterMap[y * this.xRes + x] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					if(this.mode == FractalImage.MODE_MANDELBROT)
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					}
+					else
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderJuliaPixelIters(real, imag, seedReal, seedImag, this.maxIters);
+					}
 				}
 			}
 		}
@@ -97,7 +122,14 @@ public class FractalImage
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newIterMap[y * this.xRes + x] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					if(this.mode == FractalImage.MODE_MANDELBROT)
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					}
+					else
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderJuliaPixelIters(real, imag, seedReal, seedImag, this.maxIters);
+					}
 				}
 			}
 		}
@@ -122,7 +154,14 @@ public class FractalImage
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					if(this.mode == FractalImage.MODE_MANDELBROT)
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					}
+					else
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderJuliaPixelIters(real, imag, seedReal, seedImag, this.maxIters);
+					}
 				}
 			}
 		}
@@ -147,7 +186,14 @@ public class FractalImage
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					if(this.mode == FractalImage.MODE_MANDELBROT)
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					}
+					else
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderJuliaPixelIters(real, imag, seedReal, seedImag, this.maxIters);
+					}
 				}
 			}
 		}
@@ -172,7 +218,14 @@ public class FractalImage
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					if(this.mode == FractalImage.MODE_MANDELBROT)
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					}
+					else
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderJuliaPixelIters(real, imag, seedReal, seedImag, this.maxIters);
+					}
 				}
 			}
 		}
@@ -197,7 +250,14 @@ public class FractalImage
 				{
 					double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 					double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-					newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					if(this.mode == FractalImage.MODE_MANDELBROT)
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, this.maxIters);
+					}
+					else
+					{
+						newIterMap[x + y * this.xRes] = FractalRenderer.renderJuliaPixelIters(real, imag, seedReal, seedImag, this.maxIters);
+					}
 				}
 			}
 		}
@@ -221,7 +281,14 @@ public class FractalImage
 					{
 						double real = FractalUtils.map(x, 0, xRes, minX, maxX);
 						double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
-						this.iterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, newMaxIters);
+						if(this.mode == FractalImage.MODE_MANDELBROT)
+						{
+							this.iterMap[x + y * this.xRes] = FractalRenderer.renderMandelbrotPixelIters(real, imag, newMaxIters);
+						}
+						else
+						{
+							this.iterMap[x + y * this.xRes] = FractalRenderer.renderJuliaPixelIters(real, imag, seedReal, seedImag, newMaxIters);
+						}
 					}
 				}
 				else
@@ -234,6 +301,27 @@ public class FractalImage
 			}
 		}
 		this.maxIters = newMaxIters;
+	}
+	public void setJuliaSeed(double seedReal, double seedImag)
+	{
+		this.seedReal = seedReal;
+		this.seedImag = seedImag;
+	}
+	public void setJuliaSeedMouse(int x, int y)
+	{
+		double real = FractalUtils.map(x, 0, xRes, minX, maxX);
+		double imag = FractalUtils.map(y, 0, yRes, minY, maxY);
+		setJuliaSeed(real,imag);
+	}
+	public void setMode(boolean mode)
+	{
+		this.mode = mode;
+		render();
+	}
+	public void toggleMode()
+	{
+		this.mode = !this.mode;
+		render();
 	}
 	public int[] getIterMap()
 	{

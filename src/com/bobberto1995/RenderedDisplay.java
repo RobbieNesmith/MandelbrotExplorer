@@ -12,7 +12,6 @@ public class RenderedDisplay extends PApplet
 	{
 		size(1024,768);
 		fi = new FractalImage(1024,768);
-		fi.render();
 		updated = true;
 		gradient = loadImage(sketchPath("img/Gradient3.png"));
 	}
@@ -26,7 +25,8 @@ public class RenderedDisplay extends PApplet
 	}
 	public void mousePressed()
 	{
-		fi.zoomIn(mouseX, mouseY);
+		fi.setJuliaSeedMouse(mouseX, mouseY);
+		fi.toggleMode();
 		updated = true;
 	}
 	public void keyPressed()
@@ -73,6 +73,11 @@ public class RenderedDisplay extends PApplet
 				fi.setMaxiters(fi.getMaxIters() / 2);
 				updated = true;
 			}
+		}
+		else if(key == 'Z' || key == 'z')
+		{
+			fi.reset();
+			updated = true;
 		}
 	}
 }

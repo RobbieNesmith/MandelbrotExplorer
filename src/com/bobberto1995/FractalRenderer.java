@@ -56,8 +56,8 @@ public class FractalRenderer
 			for(int x = 0; x < xRes; x++)
 			{
 				iter = 0;
-				xx = 0;
-				yy = 0;
+				xx = FractalUtils.map(x,0,xRes,minX, maxX);
+				yy = FractalUtils.map(y,0,yRes,minY, maxY);
 				while(iter < maxIters && xx * xx + yy * yy < 4)
 				{
 					temp = xx * xx - yy * yy + seedReal;
@@ -69,5 +69,20 @@ public class FractalRenderer
 			}
 		}
 		return result;
+	}
+	public static int renderJuliaPixelIters(double real, double imag, double seedReal, double seedImag, int maxIters)
+	{
+		int iter = 0;
+		double xx = real;
+		double yy = imag;
+		double temp;
+		while(iter < maxIters && xx * xx + yy * yy < 4)
+		{
+			temp = xx * xx - yy * yy + seedReal;
+			yy = 2 * xx * yy + seedImag;
+			xx = temp;
+			iter++;
+		}
+		return iter;
 	}
 }
